@@ -1,0 +1,6 @@
+*pycache*
+*.pyc
+*.ankiaddon
+*.zip
+*/meta.json
+libs_venv
