@@ -6,10 +6,13 @@ import sys
 from importlib import reload
 
 from aqt.utils import showText
-import anki.importing as importing
+from anki import importing
 
 def register(again=False):
     """Register the new importer with Anki's importers."""
+    if not again:
+        # Only on first time should we backup the original importing function
+        old_importers = importing.importers # do once hopefully
     
     addonDir = os.path.dirname(os.path.abspath(__file__))
     libsDir = os.path.join(addonDir, "lib")
@@ -18,9 +21,14 @@ def register(again=False):
     
     from . import spreadsheet
     reload(spreadsheet)
-    importer = (("Spreadsheet Import Plus (*.xlsx)", spreadsheet.SpreadsheetImporter),)
-    if again:
-        importing.Importers = importing.Importers[0:-1] + importer
-        showText(repr(importing.Importers))
-    else:
-        importing.Importers += importer
+    importer = ("Spreadsheet Import Plus (*.xlsx)", spreadsheet.SpreadsheetImporter)
+    
+    def importers(col):
+        importers = list(old_importers(col))
+        importers.append(importer)
+        return tuple(importers)
+
+    importing.importers = importers # patch the import function
+    # showText(repr(importing.importers)) # not sure if still useful since it's function
+    
+    
