@@ -1,5 +1,6 @@
 # Copyright (C) 2020  Helen Foster
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+# Jan 2022 fixes for Anki 2.1.45 by CommanderPho and Arthur Milchior
 
 import os
 import sys
@@ -29,6 +30,3 @@ def register(again=False):
         return tuple(importers)
 
     importing.importers = importers # patch the import function
-    # showText(repr(importing.importers)) # not sure if still useful since it's function
-    
-    
